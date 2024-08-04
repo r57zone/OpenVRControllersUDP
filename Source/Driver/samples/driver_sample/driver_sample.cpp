@@ -52,6 +52,9 @@ static const char * const k_pch_Sample_SerialNumber_String = "serialNumber";
 static const char * const k_pch_Sample_ModelNumber_String = "modelNumber";
 static const char * const k_pch_Sample_WindowX_Int32 = "windowX";
 static const char * const k_pch_Sample_WindowY_Int32 = "windowY";
+static const char * const k_pch_Sample_ScreenX1_Int32 = "screenX1";
+static const char * const k_pch_Sample_ScreenX2_Int32 = "screenX2";
+static const char * const k_pch_Sample_ScreenY_Int32 = "screenY";
 static const char * const k_pch_Sample_WindowWidth_Int32 = "windowWidth";
 static const char * const k_pch_Sample_WindowHeight_Int32 = "windowHeight";
 static const char * const k_pch_Sample_RenderWidth_Int32 = "renderWidth";
@@ -215,6 +218,10 @@ public:
 		if (m_nWindowHeight == 0)
 			m_nWindowHeight = GetSystemMetrics(SM_CYSCREEN);
 
+		m_nScreenX1 = vr::VRSettings()->GetInt32(k_pch_Sample_Section, k_pch_Sample_ScreenX1_Int32);
+		m_nScreenX2 = vr::VRSettings()->GetInt32(k_pch_Sample_Section, k_pch_Sample_ScreenX2_Int32);
+		m_nScreenY = vr::VRSettings()->GetInt32(k_pch_Sample_Section, k_pch_Sample_ScreenY_Int32);
+
 		m_nRenderWidth = vr::VRSettings()->GetInt32( k_pch_Sample_Section, k_pch_Sample_RenderWidth_Int32 );
 		m_nRenderHeight = vr::VRSettings()->GetInt32( k_pch_Sample_Section, k_pch_Sample_RenderHeight_Int32 );
 
@@ -361,17 +368,17 @@ public:
 
 	virtual void GetEyeOutputViewport( EVREye eEye, uint32_t *pnX, uint32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight ) 
 	{
-		*pnY = 0;
+		*pnY = m_nScreenY;
 		*pnWidth = m_nWindowWidth / 2;
 		*pnHeight = m_nWindowHeight;
 
 		if (eEye == Eye_Left)
 		{
-			*pnX = 0;
+			*pnX = m_nScreenX1;
 		}
 		else
 		{
-			*pnX = (m_nWindowWidth / 2);
+			*pnX = (m_nWindowWidth / 2) + m_nScreenX2;
 		}
 	}
 
@@ -465,6 +472,9 @@ private:
 
 	int32_t m_nWindowX;
 	int32_t m_nWindowY;
+	int32_t m_nScreenX1;
+	int32_t m_nScreenX2;
+	int32_t m_nScreenY;
 	int32_t m_nWindowWidth;
 	int32_t m_nWindowHeight;
 	int32_t m_nRenderWidth;
